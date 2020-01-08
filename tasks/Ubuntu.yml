@@ -6,7 +6,7 @@
 
 - name: Add MariaDB repository 
   apt_repository:
-    repo: 'deb [arch=amd64,arm64,ppc64el] http://mirror.netcologne.de/mariadb/repo/{{mariadbver}}/ubuntu {{ansible_distribution_release}} main'
+    repo: 'deb [arch=amd64,arm64,ppc64el] http://mirror.netcologne.de/mariadb/repo/{{mariadb_version}}/ubuntu {{ansible_distribution_release}} main'
 
 - name: Install MariaDB
   apt:  
