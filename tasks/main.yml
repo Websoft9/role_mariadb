@@ -4,7 +4,6 @@
 - import_tasks: Ubuntu.yml
   when: ansible_distribution == 'Ubuntu'
 
-
 - name: Install PyMySQL 
   pip:
     name: PyMySQL 
@@ -41,7 +40,6 @@
 - name: Removing privileges on test database
   command: mysql -uroot -p{{mariadb_root_password}} -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
 
-
 - name: Create MySQL extra databases 
   mysql_db:
     login_user: root
@@ -51,7 +49,6 @@
     state: "{{ item.state | default('present',true) }}"
   with_items: "{{ mysql_databases }}"
   when: (mysql_databases is defined) and (mysql_databases != none)
-
 
 - name: Create extra Databases User
   mysql_user:
@@ -63,7 +60,6 @@
     priv: "{{ item.priv | default('*.*:USAGE',true) }}"
   with_items: "{{ mysql_users }}"
   when: (mysql_users is defined) and (mysql_users != none)
-
 
 - name: Create credentials Folder
   file:
