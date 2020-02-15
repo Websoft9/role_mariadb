@@ -1,78 +1,83 @@
-- import_tasks: CentOS.yml
-  when: ansible_distribution == 'CentOS'
+# - name: Install PyMySQL 
+#   pip:
+#     name: PyMySQL 
 
-- import_tasks: Ubuntu.yml
-  when: ansible_distribution == 'Ubuntu'
+- import_tasks: RedHat.yml
+  when: ansible_os_family == 'RedHat'
 
-- name: Install PyMySQL 
-  pip:
-    name: PyMySQL 
+# - import_tasks: Debian.yml
+#   when: ansible_os_family == 'Debian' 
 
-- name: Change MariaDB root user password 
-  mysql_user: 
-    name: root 
-    host: '{{item}}'
-    password: "{{mariadb_root_password}}"
-  with_items: 
-    - 127.0.0.1
-    - ::1
-    - localhost
-  ignore_errors: yes
 
-- name: Removes all anyelse user accounts
-  mysql_user:
-    login_user: root
-    login_password: "{{mariadb_root_password}}"
-    name: ''
-    host_all: yes
-    state: absent
+# - name: Change MariaDB root user password 
+#   mysql_user: 
+#     login_user: root
+#     login_password: ""
+#     login_unix_socket: /var/lib/mysql/mysql.sock
+#     name: root 
+#     host: '{{item}}'
+#     password: "{{mariadb_root_password}}"
+#   with_items: 
+#     - 127.0.0.1
+#     - ::1
+#     - localhost
+#   ignore_errors: yes
 
-- name: Remove hostname user accounts
-  mysql_user: login_user=root login_password={{mariadb_root_password}} name='root' host={{ ansible_nodename }} state=absent
+# - name: Removes all anyelse user accounts
+#   mysql_user:
+#     login_user: root
+#     login_password: "{{mariadb_root_password}}"
+#     login_unix_socket: /var/lib/mysql/mysql.sock
+#     name: ''
+#     host_all: yes
+#     state: absent
 
-- name: Removes test Databases
-  mysql_db:
-    login_user: root
-    login_password: "{{mariadb_root_password}}"
-    name: test
-    state: absent
+# - name: Remove hostname user accounts
+#   mysql_user: login_user=root login_password={{mariadb_root_password}} name='root' host={{ ansible_nodename }} state=absent
 
-- name: Removing privileges on test database
-  command: mysql -uroot -p{{mariadb_root_password}} -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+# - name: Removes test Databases 
+#   mysql_db:
+#     login_user: root
+#     login_password: "{{mariadb_root_password}}"
+#     name: test
+#     state: absent
 
-- name: Create MySQL extra databases 
-  mysql_db:
-    login_user: root
-    login_password: '{{mariadb_root_password}}'
-    name: "{{ item.name }}"
-    encoding: "{{ item.encoding | default('utf8mb4',true) }}"
-    state: "{{ item.state | default('present',true) }}"
-  with_items: "{{ mariadb_databases }}"
-  when: (mariadb_databases is defined) and (mariadb_databases is not none)
+# - name: Removing privileges on test database
+#   command: mysql -uroot -p{{mariadb_root_password}} -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
 
-- name: Create extra Databases User
-  mysql_user:
-    login_user: root
-    login_password: '{{mariadb_root_password}}'
-    name: "{{ item.name }}"
-    host: "{{ item.host | default('localhost',true) }}"
-    password: "{{ item.password | default('123456',true) }}"
-    priv: "{{ item.priv | default('*.*:USAGE',true) }}"
-  with_items: "{{ mariadb_users }}"
-  when: (mariadb_users is defined) and (mariadb_users is not none)
+# - name: Create MySQL extra databases 
+#   mysql_db:
+#     login_user: root
+#     login_password: '{{mariadb_root_password}}'
+#     name: "{{ item.name }}"
+#     encoding: "{{ item.encoding | default('utf8mb4',true) }}"
+#     state: "{{ item.state | default('present',true) }}"
+#   with_items: "{{ mariadb_databases }}"
+#   when: (mariadb_databases is defined) and (mariadb_databases != none)
 
-- name: Create credentials Folder
-  file:
-    path: /credentials
-    state: directory
+# - name: Create extra Databases User
+#   mysql_user:
+#     login_user: root
+#     login_password: '{{mariadb_root_password}}'
+#     name: "{{ item.name }}"
+#     host: "{{ item.host | default('localhost',true) }}"
+#     password: "{{ item.password | default('123456',true) }}"
+#     priv: "{{ item.priv | default('*.*:USAGE',true) }}"
+#   with_items: "{{ mariadb_users }}"
+#   when: (mariadb_users is defined) and (mariadb_users != none)
 
-- name: Write Databases Password
-  template:
-    src: password.txt.jinja2
-    dest: /credentials/password.txt
-    mode: 644
+# - name: Create credentials Folder
+#   file:
+#     path: /credentials
+#     state: directory
 
-- name: Check MySQL Version
-  shell: mysql -V
-  register: mysql_ver
-  notify: MariaDB Version
+# - name: Write Databases Password
+#   template:
+#     src: password.txt.jinja2
+#     dest: /credentials/password.txt
+#     mode: 644
+
+# - name: Check MySQL Version
+#   shell: mysql -V
+#   register: mysql_ver
+#   notify: MariaDB Version

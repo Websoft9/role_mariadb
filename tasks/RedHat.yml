@@ -5,12 +5,22 @@
     file: MariaDB
     baseurl: http://yum.mariadb.org/{{mariadb_version}}/centos{{ansible_distribution_major_version}}-amd64
     gpgkey: https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-    # gpgcheck: yes
+  when: ansible_distribution == 'CentOS'
+
+- name: Add MariaDB repository
+  yum_repository:
+    name: mariadb
+    description: mariadb YUM repo
+    file: MariaDB
+    baseurl: http://yum.mariadb.org/{{mariadb_version}}/centos7-amd64
+    gpgkey: https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+  when: ansible_distribution == 'Amazon'
+
 
 
 - name: Install MariaDB
   yum: 
-    name: [MariaDB-server,MariaDB-client,MySQL-python]
+    name: [MariaDB-server,MariaDB-client]
 
 - name: Create Databases Directory
   file:
@@ -23,7 +33,7 @@
   template: src=my.cnf.jinja2 dest=/etc/my.cnf
 
 - name: init Source data
-  shell: mysql_install_db --user=mysql --datadir=/data/mysql
+  shell: rm -rf /data/mysql/*;mysql_install_db --user=mysql --datadir=/data/mysql
 
 
 - name: Restart MariaDB
