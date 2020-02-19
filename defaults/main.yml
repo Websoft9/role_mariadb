@@ -1,5 +1,5 @@
 mariadb_version: "10.4"     # 10.1 10.2 10.3 10.4 Centos8 10.3/10.4
-mariadb_root_password: 123456 #  默认密码
+mariadb_root_password: "123456" #  默认密码
 
 mariadb_databases: []
 #  - name: example 
