@@ -1,5 +1,9 @@
-mariadb_version: "10.4"     # 10.1 10.2 10.3 10.4 Centos8 10.3/10.4
+# 10.1 10.2 10.3 10.4 on CentOS7.x, 10.3/10.4 on CentOS8
+mariadb_version: "10.4"     
 mariadb_root_password: "123456" #  默认密码
+
+#Enable or disable mariadb remote connection  True | False
+mariadb_remote: False
 
 mariadb_databases: []
 #  - name: example 

@@ -70,3 +70,7 @@
   shell: mysql -V
   register: mysql_ver
   notify: MariaDB Version
+
+#Enable remote connection
+- import_tasks: remote.yml
+  when: mariadb_remote
