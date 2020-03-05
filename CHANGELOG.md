@@ -8,7 +8,7 @@
 
 ### Bug Fixes
 
-* 2020-02-14  
+* 2020-03-05  修改数据库连接方式login_host报错，修正为：login_unix_socket: /var/lib/mysql/mysql.sock
 
 ### Features
 
