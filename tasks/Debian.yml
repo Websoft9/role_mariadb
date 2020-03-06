@@ -15,7 +15,8 @@
 - name: config MariaDB
   template:
     src: my.cnf.jinja2
-    dest: /etc/mysql/conf.d/mysql.cnf
+    dest: /etc/mysql/my.cnf
+    
 
 - name: create databases dir
   file:
