@@ -49,12 +49,13 @@
     state: absent
 
 - name: Removing privileges on test database
-  command: mysql -uroot -p{{mariadb_root_password}} -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+  command: mysql -uroot -p{{mariadb_root_password}} -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'" -S /data/mysql/mysqld.sock
 
 - name: Create MySQL extra databases 
   mysql_db:
     login_user: root
     login_password: '{{mariadb_root_password}}'
+    login_unix_socket: /data/mysql/mysqld.sock
     name: "{{ item.name }}"
     encoding: "{{ item.encoding | default('utf8mb4',true) }}"
     state: "{{ item.state | default('present',true) }}"
@@ -65,6 +66,7 @@
   mysql_user:
     login_user: root
     login_password: '{{mariadb_root_password}}'
+    login_unix_socket: /data/mysql/mysqld.sock
     name: "{{ item.name }}"
     host: "{{ item.host | default('localhost',true) }}"
     password: "{{ item.password | default('123456',true) }}"
