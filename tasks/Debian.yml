@@ -46,4 +46,4 @@
     dest: '{{item.dest}}'
     state: link
   with_items:
-    - {src: '/etc/mysql/conf.d/mysql.cnf',dest: /data/config/mysqld.cnf}  
+    - {src: '/etc/mysql/my.cnf',dest: /data/config/my.cnf}  
