@@ -10,12 +10,13 @@
 
 - name: Install MariaDB
   apt:  
-    name: [mariadb-server,mariadb-client,mariadb-backup,mariadb-common,python-pymysql]
+    name: [mariadb-server,mariadb-client,mariadb-common,python-pymysql]
 
 - name: config MariaDB
   template:
     src: my.cnf.jinja2
-    dest: /etc/mysql/conf.d/mysql.cnf
+    dest: /etc/mysql/my.cnf
+    
 
 - name: create databases dir
   file:
@@ -45,4 +46,4 @@
     dest: '{{item.dest}}'
     state: link
   with_items:
-    - {src: '/etc/mysql/conf.d/mysql.cnf',dest: /data/config/mysqld.cnf}  
+    - {src: '/etc/mysql/my.cnf',dest: /data/config/my.cnf}  
