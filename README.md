@@ -1,84 +1,69 @@
 Ansible Role: mariadb
 =========
 
-在CentOS或者Ubuntu服务器上安装和配置 MariaDB 
+本 Role 在CentOS或者Ubuntu服务器上安装和配置 MariaDB。
 
-Requirements
-------------
+## Requirements
 
-无特殊要求,此 role 需要 root 用户权限,可以在playbook全局加入 `become: yes`,或者如下调用 role:
+运行本 Role，请确认符合如下的必要条件：
+
+| **Items**      | **Details** |
+| ------------------| ------------------|
+| Operating system | CentOS7.x Ubuntu18.04 AmazonLinux|
+| Python 版本 | Python2  |
+| Python 组件 |    |
+| Runtime |  |
+
+
+## Related roles
+
+本 Role 在语法上不依赖其他 role 的变量，但程序运行时需要确保已经运行：common。以 mariadb 为例：
 
 ```
-- hosts: database
   roles:
-    - role: role_mariadb
-      become: yes
-```
-
-Role Variables
---------------
-
-下面列出了可用变量和默认值(请参见"defaults/main.yml"):
-
-```
-# 支持版本 Centos7/Ubuntu18.04 支持 10.1 10.2 10.3 10.4 Centos8 10.3/10.4
-
-mariadb_version: "10.4"       
-
-# mariadb root 密码
-mariadb_root_password: "123456"  
-
-# 新建数据库
-mariadb_databases: []
- # - name: example 
-  # encoding: utf8mb4
-
-# 新建数据库用户
-mariadb_users: []
- # - name: example
-  # host: localhost
-  # password: password
-  # priv: 'example.*:ALL'
+   - {role: role_common, tags: "role_common"}   
+   - {role: role_cloud, tags: "role_cloud"}
+   - {role: role_mariadb, tags: "role_mariadb"}
 ```
 
 
+## Variables
 
-Dependencies
-------------
+本 Role 主要变量以及使用方法如下：
 
-None
+| **Items**      | **Details** | **Format**  | **是否初始化** |
+| ------------------| ------------------|-----|-----|
+| mariadb_version | [ 10.1, 10.2, 10.3, 10.4 ] | 字符串 |是|
+| mariadb_root_password | [ "123456"] | 字符串 |是|
+| mariadb_remote | [ "true", "false" ] | 字符串 |是|
+| mariadb_databases | []   | 字典 |否|
+| mariadb_users | []   | 字典 |否|
 
-Example Playbook
-----------------
+注意：
+1. mariadb_version, mariadb_remote  的值在 mariadb.yml 中由用户选择输入；
+2. mariadb_root_password，mariadb_databases，mariadb_users 的值在主变量文件[main.yml](https://github.com/Websoft9/ansible-mariadb/blob/master/vars/main.yml)中定义。
+
+
+## Example
 
 ```
-- hosts: db-servers
+- name: MariadDB
+  hosts: all
   become: yes
+  become_method: sudo 
   vars_files:
-    - vars/main.yml
+    - vars/main.yml 
+
   roles:
-    - { role: role_mariadb }
+   - {role: role_common, tags: "role_common"}   
+   - {role: role_cloud, tags: "role_cloud"}
+   - {role: role_mariadb, tags: "role_mariadb"}
+   - {role: role_docker, tags: "role_docker", when: phpmyadmin_install_docker}
+   - {role: role_docker_phpmyadmin, tags: "role_docker_phpmyadmin", when: phpmyadmin_install_docker}
+   - {role: role_init_password, tags: "role_init_password"}
+   - {role: role_end, tags: "role_end"} 
 ```
 
-`vars/main.yml` :
-```
-mariadb_version: "10.4"
-mariadb_root_password: "123456" 
+## FAQ
 
-mariadb_databases: 
-  - name: example 
-    encoding: utf8mb4
-
-  
-mariadb_users: 
-  - name: example
-    host: localhost
-    password: password
-    priv: 'example.*:ALL'
-```
-
-License
--------
-
-BSD
 
