@@ -75,7 +75,7 @@
   when: (mariadb_users is defined) and (mariadb_users != none)
 
 # display version and service state of components
-- name: Get MySQL version
+- name: Get MariaDB version
   shell: sudo sh -c "mysql -V 1>> /data/logs/install_version.txt"
 
 #Enable remote connection
