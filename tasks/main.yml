@@ -74,10 +74,9 @@
   with_items: "{{ mariadb_users }}"
   when: (mariadb_users is defined) and (mariadb_users != none)
 
-- name: Check MySQL Version
-  shell: mysql -V
-  register: mysql_ver
-  notify: MariaDB Version
+# display version and service state of components
+- name: Get MySQL version
+  shell: sudo sh -c "mysql -V 1>> /data/logs/install_version.txt"
 
 #Enable remote connection
 - import_tasks: remote.yml
