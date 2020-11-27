@@ -12,6 +12,12 @@ mariadb_databases: []
 #Set mariadb engine
 mariadb_engine: "INNODB"
 
+mariadb_configuration_default:
+  - name: innodb_buffer_pool_size
+    value: 2G
+  - name: innodb_log_file_size
+    value: 500M
+
 mariadb_users: []
 #  - name: example
 #    host: locahost
