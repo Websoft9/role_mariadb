@@ -16,7 +16,12 @@
   template:
     src: my.cnf.jinja2
     dest: /etc/mysql/my.cnf
-    
+
+- name: Link my.cnf
+  file:
+    src: /etc/mysql/my.cnf
+    dest: /etc/my.cnf
+    state: link
 
 - name: create databases dir
   file:
