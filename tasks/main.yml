@@ -57,7 +57,12 @@
     line: "{{ item.name }} = {{item.value}}"
   with_items: "{{ mariadb_configuration_default }}"
   when: mariadb_configuration_default is defined and mariadb_configuration_default != none
-  
+
+- name: Restart MariaDB
+  service:
+    name: mariadb
+    state: restarted
+    
 - name: Removing privileges on test database
   command: mysql -uroot -p{{mariadb_root_password}} -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'" -S /data/mysql/mysqld.sock
 
