@@ -51,7 +51,7 @@
 - name: Change MySQL configuration default
   lineinfile:
     dest: /etc/my.cnf
-    regexp: '^{{ item.name }} = *'
+    regexp: '^{{ item.name }}.*'
     insertafter: '\[mysqld\]'
     firstmatch: yes
     line: "{{ item.name }} = {{item.value}}"
