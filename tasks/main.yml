@@ -55,8 +55,8 @@
     insertafter: '\[mysqld\]'
     firstmatch: yes
     line: "{{ item.name }} = {{item.value}}"
-  with_items: "{{ mysql_configuration_default }}"
-  when: mysql_configuration_default is defined and mysql_configuration_default != none
+  with_items: "{{ mariadb_configuration_default }}"
+  when: mariadb_configuration_default is defined and mariadb_configuration_default != none
   
 - name: Removing privileges on test database
   command: mysql -uroot -p{{mariadb_root_password}} -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'" -S /data/mysql/mysqld.sock
