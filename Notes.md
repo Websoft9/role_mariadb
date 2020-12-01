@@ -21,7 +21,7 @@ pid-file=/var/run/mariadb/mariadb.pid
 !includedir /etc/my.cnf.d
 ```
 
-### MariaDB default my.cnf
+### MariaDB default client.cnf
 ```
 #
 # These groups are read by MariaDB command-line tools
