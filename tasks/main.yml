@@ -83,7 +83,7 @@
     login_password: '{{mariadb_root_password}}'
     login_unix_socket: /data/mysql/mysqld.sock
     name: "{{ item.name }}"
-    host: "{{ item.host | default('localhost',true) }}"
+    host: "{{ item.host | default('%',true) }}"
     password: "{{ item.password | default('123456',true) }}"
     priv: "{{ item.priv | default('*.*:USAGE',true) }}"
   with_items: "{{ mariadb_users }}"
