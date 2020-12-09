@@ -2,20 +2,16 @@
   pip:
     name: PyMySQL 
 
-- import_tasks: RedHat.yml
-  when: ansible_os_family == 'RedHat'
+- include: "{{ansible_os_family}}.yml"
 
-- import_tasks: Debian.yml
-  when: ansible_os_family == 'Debian' 
-
-- name: Create a softlink to match MySQL
+- name: Create a softlink to match MariaDB
   file:
     src: '{{item.src}}'
     dest: '{{item.dest}}'
     state: link
   with_items:
-    - {src: /data/mariadb,dest: /data/mysql}
-    - {src: /data/mariadb/mariadb.sock,dest: /data/mariadb/mysqld.sock}
+    - {src: /data/mysql,dest: /data/mariadb}
+    - {src: /data/mysql/mariadb.sock,dest: /data/mysql/mysqld.sock}
 
 - name: Change MariaDB root user password 
   mysql_user: 
