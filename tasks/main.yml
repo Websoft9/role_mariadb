@@ -8,6 +8,14 @@
 - import_tasks: Debian.yml
   when: ansible_os_family == 'Debian' 
 
+- name: Create a softlink to match MySQL
+  file:
+    src: '{{item.src}}'
+    dest: '{{item.dest}}'
+    state: link
+  with_items:
+    - {src: /data/mariadb,dest: /data/mysql}
+    - {src: /data/mariadb/mariadb.sock,dest: /data/mariadb/mysqld.sock}
 
 - name: Change MariaDB root user password 
   mysql_user: 
