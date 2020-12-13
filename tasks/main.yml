@@ -11,7 +11,7 @@
     state: link
   with_items:
     - {src: /data/mysql,dest: /data/mariadb}
-    - {src: /data/mysql/mariadb.sock,dest: /data/mysql/mysqld.sock}
+    - {src: /data/mysql/mysqld.sock,dest: /data/mysql/mariadb.sock}
 
 - name: Change MariaDB root user password 
   mysql_user: 
