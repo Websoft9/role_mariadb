@@ -10,7 +10,7 @@
 
 - name: Install MariaDB
   apt:  
-    name: [mariadb-server,mariadb-client,mariadb-common,python-pymysql]
+    name: [mariadb-server,mariadb-client,mariadb-common,python3-pymysql]
 
 - name: config MariaDB
   template:
