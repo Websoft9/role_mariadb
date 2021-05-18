@@ -16,33 +16,41 @@
     gpgkey: https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
   when: ansible_distribution == 'Amazon'
 
-- name: Install MariaDB
+- block:
+  - name: Install MariaDB
+    yum: 
+      name: [MariaDB-server,MariaDB-client]
+
+  - name: Create Databases Directory
+    file:
+      path: /data/mysql
+      state: directory
+      owner: mysql
+      group: mysql
+    
+  - name: Copy MariaDB Configuration
+    template: src=my.cnf.jinja2 dest=/etc/my.cnf
+
+  - name: init Source data
+    shell: rm -rf /data/mysql/*;mysql_install_db --user=mysql --datadir=/data/mysql
+
+  - name: Restart MariaDB
+    service:
+      name: mariadb
+      state: restarted
+      enabled: yes
+
+  - name: Create a MariaDB  symbolic link
+    file:
+      src: '{{item.src}}'
+      dest: '{{item.dest}}'
+      state: link
+    with_items:
+      - {src: '/etc/my.cnf',dest: /data/config/my.cnf}
+
+  when: mariadb_install_server == "package"
+
+- name: Install MariaDB Client
   yum: 
-    name: [MariaDB-server,MariaDB-client]
-
-- name: Create Databases Directory
-  file:
-    path: /data/mysql
-    state: directory
-    owner: mysql
-    group: mysql
-  
-- name: Copy MariaDB Configuration
-  template: src=my.cnf.jinja2 dest=/etc/my.cnf
-
-- name: init Source data
-  shell: rm -rf /data/mysql/*;mysql_install_db --user=mysql --datadir=/data/mysql
-
-- name: Restart MariaDB
-  service:
-    name: mariadb
-    state: restarted
-    enabled: yes
-
-- name: Create a MariaDB  symbolic link
-  file:
-    src: '{{item.src}}'
-    dest: '{{item.dest}}'
-    state: link
-  with_items:
-    - {src: '/etc/my.cnf',dest: /data/config/my.cnf}
+    name: MariaDB-client
+  when: not mariadb_install_server 

@@ -8,47 +8,54 @@
   apt_repository:
     repo: 'deb [arch=amd64,arm64,ppc64el] http://mirror.netcologne.de/mariadb/repo/{{mariadb_version}}/ubuntu {{ansible_distribution_release}} main'
 
+- block:
+  - name: Install MariaDB
+    apt:  
+      name: [mariadb-server,mariadb-client,mariadb-common,python3-pymysql]
+
+  - name: config MariaDB
+    template:
+      src: my.cnf.jinja2
+      dest: /etc/mysql/my.cnf
+
+  - name: Link my.cnf
+    file:
+      src: /etc/mysql/my.cnf
+      dest: /etc/my.cnf
+      state: link
+
+  - name: create databases dir
+    file:
+      path: /data/mysql
+      state: directory
+      owner: mysql
+      group: mysql
+
+  - name: init Source data
+    shell: rm - rf /data/mysql/*;mysql_install_db --user=mysql --datadir=/data/mysql
+
+  - name: Restart MariaDB
+    service:
+      name: mariadb
+      enabled: yes
+      state: restarted
+
+  - name: del MariaDB Automatically generated for Debian scripts.
+    file:
+      path: /etc/mysql/debian.cnf
+      state: absent
+
+  - name: Create a MariaDB  symbolic link
+    file:
+      src: '{{item.src}}'
+      dest: '{{item.dest}}'
+      state: link
+    with_items:
+      - {src: '/etc/mysql/my.cnf',dest: /data/config/my.cnf}
+
+  when: mariadb_install_server == "package"   
+
 - name: Install MariaDB
   apt:  
-    name: [mariadb-server,mariadb-client,mariadb-common,python3-pymysql]
-
-- name: config MariaDB
-  template:
-    src: my.cnf.jinja2
-    dest: /etc/mysql/my.cnf
-
-- name: Link my.cnf
-  file:
-    src: /etc/mysql/my.cnf
-    dest: /etc/my.cnf
-    state: link
-
-- name: create databases dir
-  file:
-    path: /data/mysql
-    state: directory
-    owner: mysql
-    group: mysql
-
-- name: init Source data
-  shell: rm - rf /data/mysql/*;mysql_install_db --user=mysql --datadir=/data/mysql
-
-- name: Restart MariaDB
-  service:
-    name: mariadb
-    enabled: yes
-    state: restarted
-
-- name: del MariaDB Automatically generated for Debian scripts.
-  file:
-    path: /etc/mysql/debian.cnf
-    state: absent
-
-
-- name: Create a MariaDB  symbolic link
-  file:
-    src: '{{item.src}}'
-    dest: '{{item.dest}}'
-    state: link
-  with_items:
-    - {src: '/etc/mysql/my.cnf',dest: /data/config/my.cnf}  
+    name: mariadb-client
+  when: not mariadb_install_server
