@@ -2,6 +2,9 @@
 mariadb_version: "10.4"     
 mariadb_root_password: "123456" #  默认密码
 
+# instll_way: "package" | False
+mariadb_install_server: "package"
+
 #Enable or disable mariadb remote connection  True | False
 mariadb_remote: False
 
