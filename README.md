@@ -63,6 +63,12 @@ Ansible Role: mariadb
    - {role: role_init_password, tags: "role_init_password"}
    - {role: role_end, tags: "role_end"} 
 ```
+## Installation
+
+```
+git clone https://github.com/Websoft9/role_mariadb.git
+ansible-playbook role_mariadb/tests/test.yml
+```
 
 ## FAQ
 
