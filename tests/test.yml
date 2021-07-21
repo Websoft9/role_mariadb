@@ -3,3 +3,38 @@
   remote_user: root
   roles:
     - role_mariadb
+    
+  vars_prompt:
+    - name: 'mariadb'
+      prompt: "\nPlease choose the number for MariaDB version [ 1/2/3/4...] \n\n
+      1: MariaDB10.1\n
+      2: MariaDB10.2\n
+      3: MariaDB10.3\n
+      4: MariaDB10.4\n
+      5: MariaDB10.5\n"
+      private: no
+      default: 3
+
+    - name: 'mariadb_input_password'
+      prompt: "\nPlease your MariaDB root password: \n\ndefault"
+      private: no
+      default: 123456
+
+  vars:
+    mariadb_select:
+      '1': '10.1'
+      '2': '10.2'
+      '3': '10.3'
+      '4': '10.4'
+      '5': '10.5'
+    mariadb_version: "{{mariadb_select[mariadb]}}"
+    mariadb_root_password: "{{mariadb_input_password}}"
+
+  pre_tasks:
+   - debug:
+       msg: Will install MariaDB {{mariadb_version}}
+
+  post_tasks:
+    - name: pre_post
+      debug:
+        msg: MariaDB default password is {{mariadb_root_password}} , please modify it by yourself
